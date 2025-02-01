@@ -6,7 +6,6 @@
         try {
             const rawResult = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(job.url)}&format=json`);
             const jsonResult = await rawResult.json();
-            console.log('video data', jsonResult);
             job.status = 'done';
             job.text = jsonResult.title;
             if (job.elementTitle) {
@@ -14,6 +13,9 @@
             }
             if (job.elementMainTitle) {
                 job.elementMainTitle.textContent = job.text;
+            }
+            if (job.elementPageTitle) {
+                job.elementPageTitle.textContent = job.text;
             }
         } catch (e) {
             console.error('Failed fetching OEmbed information about URL', job.url, e);
@@ -70,6 +72,22 @@
         }
     };
 
+    const checkVideoPageTitleForUpdated = (element) => {
+        const job = upsertJobForUrl(window.location.href);
+        if (!job) {
+            return;
+        }
+        job.elementPageTitle = element;
+        // note: we do not care about this complicated hierarchy of elements in the title, for now
+        // (ytd-badge-supported-renderer, yt-formatted-string, etc, etc)
+        // this is because this part is implementation-specific and prone to change
+        if (job.status === 'done' && job.text !== element.textContent) {
+            element.textContent = job.text;
+        } else if (job.status === 'pending' && '...' !== element.textContent) {
+            element.textContent = '...';
+        }
+    };
+
     const checkVideoTitleForUpdated = (element) => {
         const linkTo = element.closest('a[href]');
         if (!linkTo) {
@@ -98,7 +116,7 @@
                    element.closest('#primary #title')) { // title on the main watched video
             checkVideoMainTitleForUpdated(element);
         } else if (element.tagName === 'TITLE') {
-            checkVideoMainTitleForUpdated(element);
+            checkVideoPageTitleForUpdated(element);
         }
     };
 
