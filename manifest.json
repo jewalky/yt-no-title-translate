@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "YouTube No Title Translate",
+  "version": "1.0",
+
+  "description": "Rewrites YT video titles back to default language. Includes currently watched video, front page and video suggestions.",
+
+  "icons": {
+    "48": "icons/48.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://youtube.com/*"],
+      "js": ["fix-titles.js"]
+    }
+  ]
+}
