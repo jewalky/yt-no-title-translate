@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "YouTube No Title Translate",
-  "version": "1.1.1",
+  "version": "1.2",
 
   "description": "Rewrites YT video titles back to default language. Includes currently watched video, front page and video suggestions.",
 
